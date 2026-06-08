@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -448,6 +449,12 @@ async function fbDelete(path){
   else{setSyncStatus('error','Erro ao salvar');}
   return r.ok;
 }
+async function fbMarkDeleted(id){
+  await fetch(`${DB_URL}/deleted/${id}.json`,{method:'PUT',headers:{'Content-Type':'application/json'},body:'true'});
+}
+async function fbGetDeleted(){
+  try{const r=await fetch(`${DB_URL}/deleted.json`);return r.ok?(await r.json()||{}):{};} catch(e){return {};}
+}
 
 /* long-polling para sincronização em tempo real */
 let pollTimer=null;
@@ -458,18 +465,18 @@ function startPolling(){
     try{
       const data=await fbGet('events');
       const h=JSON.stringify(data);
+      const deleted=await fbGetDeleted();
       if(h!==lastHash){
         lastHash=h;
         if(data){
           const remoteEvs=Object.values(data);
           const pdfIds=new Set(PDF_DEFAULTS.map(e=>e.id));
-          // merge: default events + remote overrides + remote new events
           const remoteMap=new Map(remoteEvs.map(e=>[e.id,e]));
-          const merged=PDF_DEFAULTS.map(e=>remoteMap.has(e.id)?remoteMap.get(e.id):e);
-          remoteEvs.filter(e=>!pdfIds.has(e.id)).forEach(e=>merged.push(e));
+          const merged=PDF_DEFAULTS.filter(e=>!deleted[e.id]).map(e=>remoteMap.has(e.id)?remoteMap.get(e.id):e);
+          remoteEvs.filter(e=>!pdfIds.has(e.id)&&!deleted[e.id]).forEach(e=>merged.push(e));
           state.events=merged;
         } else {
-          state.events=[...PDF_DEFAULTS];
+          state.events=PDF_DEFAULTS.filter(e=>!deleted[e.id]);
         }
         renderAll();
       }
@@ -491,13 +498,13 @@ async function initFirebase(){
   document.getElementById('setup-banner').classList.add('hidden');
   setSyncStatus('syncing','Conectando...');
   try{
-    const data=await fbGet('events');
+    const [data, deleted]=await Promise.all([fbGet('events'), fbGetDeleted()]);
     if(data){
       const remoteEvs=Object.values(data);
       const pdfIds=new Set(PDF_DEFAULTS.map(e=>e.id));
       const remoteMap=new Map(remoteEvs.map(e=>[e.id,e]));
-      const merged=PDF_DEFAULTS.map(e=>remoteMap.has(e.id)?remoteMap.get(e.id):e);
-      remoteEvs.filter(e=>!pdfIds.has(e.id)).forEach(e=>merged.push(e));
+      const merged=PDF_DEFAULTS.filter(e=>!deleted[e.id]).map(e=>remoteMap.has(e.id)?remoteMap.get(e.id):e);
+      remoteEvs.filter(e=>!pdfIds.has(e.id)&&!deleted[e.id]).forEach(e=>merged.push(e));
       state.events=merged;
     } else {
       // primeira vez: enviar dados default para o Firebase
@@ -541,7 +548,10 @@ async function saveEv(){
 async function deleteEv(id){
   if(!confirm('Excluir esta reunião?')) return;
   state.events=state.events.filter(e=>e.id!==id);
-  if(firebaseReady) await fbDelete(`events/${id}`);
+  if(firebaseReady){
+    await fbDelete(`events/${id}`);
+    await fbMarkDeleted(id);
+  }
   state.editEv=null;
   state.modalMode=state.dayDate?'day':null;
   renderModal();renderAll();
