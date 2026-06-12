@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -201,7 +200,7 @@ textarea{resize:vertical;min-height:70px;}
 <div class="main">
 
   <!-- Setup banner - shown until Firebase is configured -->
-  <div class="setup-banner" id="setup-banner">
+  <div class="setup-banner hidden" id="setup-banner">
     <div class="setup-icon">⚙️</div>
     <div class="setup-text">
       <strong>Configure o Firebase para sincronização em nuvem</strong>
@@ -270,7 +269,7 @@ textarea{resize:vertical;min-height:70px;}
    FIREBASE CONFIG
    ══════════════════════════════════════════════ */
 const FIREBASE_API_KEY = 'AIzaSyPlaceholder'; // não usado no Realtime DB com regras públicas
-let DB_URL = localStorage.getItem('ap_firebase_url') || '';
+let DB_URL = localStorage.getItem('ap_firebase_url') || 'https://agenda-positiva-f4290-default-rtdb.firebaseio.com';
 
 function saveFirebaseConfig(){
   const val = document.getElementById('firebase-url-input').value.trim().replace(/\/$/, '');
