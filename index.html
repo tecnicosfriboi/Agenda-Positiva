@@ -581,7 +581,7 @@ function visible(ev){
   if(state.filter==='all') return true;
   if(state.filter==='pollyanna') return ev.resp==='pollyanna'||ev.resp==='ambas';
   if(state.filter==='fernanda') return ev.resp==='fernanda'||ev.resp==='ambas';
-  if(state.filter==='luiz') return ev.resp==='luiz'||ev.resp==='ambas';
+  if(state.filter==='luiz') return ev.resp==='luiz';
   return true;
 }
 function filteredEvents(){return state.events.filter(visible);}
