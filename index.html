@@ -36,7 +36,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-seri
 .setup-btn:hover{background:#633806;}
 
 .main{max-width:1000px;margin:0 auto;padding:1.25rem 0.75rem 3rem;}
-.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem;}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem;}
 .stat-card{background:#fff;border-radius:12px;padding:12px 14px;border:1px solid #C8D9F5;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(0,48,135,.07);}
 .stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
 .stat-val{font-size:24px;font-weight:800;line-height:1;color:#111;}
@@ -49,11 +49,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-seri
 .ftab.active-all{background:#003087;color:#fff;border-color:#003087;}
 .ftab.active-pol{background:#1565C0;color:#fff;border-color:#1565C0;}
 .ftab.active-fer{background:#D4537E;color:#fff;border-color:#D4537E;}
+.ftab.active-luiz{background:#1D9E75;color:#fff;border-color:#1D9E75;}
 
 .av{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-weight:700;flex-shrink:0;}
 .av-p{background:#1565C0;color:#fff;}
 .av-f{background:#D4537E;color:#fff;}
-.av-pf{background:linear-gradient(135deg,#7F77DD 50%,#D4537E 50%);color:#fff;}
+.av-pf{background:linear-gradient(135deg,#1565C0 50%,#D4537E 50%);color:#fff;}
+.av-l{background:#1D9E75;color:#fff;}
+.av-plf{background:conic-gradient(#1565C0 0deg 120deg,#D4537E 120deg 240deg,#1D9E75 240deg 360deg);color:#fff;font-size:5px;}
 
 .cal-card{background:#fff;border-radius:16px;border:1px solid #C8D9F5;overflow:hidden;box-shadow:0 2px 12px rgba(0,48,135,.08);}
 .cal-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #E4EEF9;gap:8px;flex-wrap:wrap;background:linear-gradient(135deg,#F0F6FF 0%,#fff 100%);}
@@ -135,6 +138,8 @@ textarea{resize:vertical;min-height:70px;}
 .b-pol{background:#DDEAFF;color:#003087;}
 .b-fer{background:#FBEAF0;color:#72243E;}
 .b-amb{background:#EAF3DE;color:#27500A;}
+.b-luiz{background:#D4FAEA;color:#085041;}
+.b-planta{background:#FFF3CD;color:#7B5800;}
 .edit-del{display:flex;gap:3px;flex-shrink:0;}
 .icon-btn{background:none;border:none;cursor:pointer;color:#bbb;padding:5px 7px;border-radius:8px;font-size:18px;transition:all .15s;}
 .icon-btn:hover{background:#f0f0f0;color:#333;}
@@ -151,6 +156,7 @@ textarea{resize:vertical;min-height:70px;}
 .rl.s-pollyanna{border-color:#1565C0;background:#DDEAFF;color:#003087;}
 .rl.s-fernanda{border-color:#D4537E;background:#FBEAF0;color:#72243E;}
 .rl.s-ambas{border-color:#639922;background:#EAF3DE;color:#27500A;}
+.rl.s-luiz{border-color:#1D9E75;background:#D4FAEA;color:#085041;}
 
 .fab{display:none;position:fixed;bottom:24px;right:20px;z-index:100;width:56px;height:56px;border-radius:50%;background:#003087;border:none;color:#fff;font-size:28px;cursor:pointer;box-shadow:0 4px 16px rgba(0,48,135,.45);align-items:center;justify-content:center;font-family:inherit;}
 .fab:hover{background:#002066;}
@@ -161,7 +167,7 @@ textarea{resize:vertical;min-height:70px;}
   .topbar-tag{font-size:9px;padding:2px 5px;}
   .export-label,.sync-label{display:none;}
   .main{padding:1rem 0.6rem 5rem;}
-  .stats-row{grid-template-columns:1fr;gap:8px;}
+  .stats-row{grid-template-columns:repeat(2,1fr);gap:8px;}
   .stat-card{padding:10px 13px;}
   .stat-val{font-size:22px;}
   .filter-label{display:none;}
@@ -226,6 +232,9 @@ textarea{resize:vertical;min-height:70px;}
     <button class="ftab" data-f="fernanda" onclick="setFilter('fernanda')">
       <span class="av av-f" style="width:18px;height:18px;font-size:8px;">F</span> Fernanda
     </button>
+    <button class="ftab" data-f="luiz" onclick="setFilter('luiz')">
+      <span class="av av-l" style="width:18px;height:18px;font-size:8px;">L</span> Luiz
+    </button>
   </div>
 
   <div class="cal-card">
@@ -249,6 +258,8 @@ textarea{resize:vertical;min-height:70px;}
       <span class="legend-item"><span class="av av-p" style="width:12px;height:12px;font-size:7px;">P</span>Pollyanna</span>
       <span class="legend-item"><span class="av av-f" style="width:12px;height:12px;font-size:7px;">F</span>Fernanda</span>
       <span class="legend-item"><span class="av av-pf" style="width:12px;height:12px;font-size:6px;">PF</span>Ambas</span>
+      <span class="legend-item"><span class="av av-l" style="width:12px;height:12px;font-size:7px;">L</span>Luiz</span>
+      <span class="legend-item"><span style="background:#FFF3CD;border:1px solid #F0C000;border-radius:3px;padding:0 4px;font-size:9px;color:#7B5800;font-weight:700;">🏭</span>Visita planta</span>
     </div>
     <div class="grid-wrap">
       <div class="grid-header" id="grid-header"></div>
@@ -303,9 +314,10 @@ const C={
   outro_presencial: {bg:'#F1EFE8',fg:'#444441',bdr:'#888780',icon:'🏢',bcls:'b-ou'},
 };
 const RC={
-  pollyanna:{lbl:'Pollyanna',s:'P', av:'av-p',bc:'b-pol'},
-  fernanda: {lbl:'Fernanda', s:'F', av:'av-f',bc:'b-fer'},
-  ambas:    {lbl:'Ambas',    s:'PF',av:'av-pf',bc:'b-amb'},
+  pollyanna:{lbl:'Pollyanna',s:'P',  av:'av-p',  bc:'b-pol'},
+  fernanda: {lbl:'Fernanda', s:'F',  av:'av-f',  bc:'b-fer'},
+  ambas:    {lbl:'Ambas',    s:'PF', av:'av-pf', bc:'b-amb'},
+  luiz:     {lbl:'Luiz',    s:'L',  av:'av-l',  bc:'b-luiz'},
 };
 
 const PDF_DEFAULTS=[
@@ -535,6 +547,9 @@ async function saveEv(){
     mod:document.getElementById('ev-mod').value,
     tipo:document.getElementById('ev-tipo').value,
     desc:document.getElementById('ev-desc').value.trim(),
+    planta:document.getElementById('ev-planta')?document.getElementById('ev-planta').checked:false,
+    clientePlanta:document.getElementById('ev-clientePlanta')?document.getElementById('ev-clientePlanta').value.trim():'',
+    estadoCliente:document.getElementById('ev-estadoCliente')?document.getElementById('ev-estadoCliente').value.trim():'',
   };
   if(isEdit){state.events=state.events.map(e=>e.id===newEv.id?newEv:e);}
   else{state.events.push(newEv);}
@@ -566,32 +581,40 @@ function visible(ev){
   if(state.filter==='all') return true;
   if(state.filter==='pollyanna') return ev.resp==='pollyanna'||ev.resp==='ambas';
   if(state.filter==='fernanda') return ev.resp==='fernanda'||ev.resp==='ambas';
+  if(state.filter==='luiz') return ev.resp==='luiz'||ev.resp==='ambas';
   return true;
 }
 function filteredEvents(){return state.events.filter(visible);}
 function computeStats(){
   const evs=filteredEvents();
-  return{total:evs.length,clientes:evs.filter(e=>e.tipo==='cliente').length,
-    equipe_days:new Set(evs.filter(e=>e.tipo==='equipe').map(e=>e.date)).size};
+  return{
+    total:evs.length,
+    clientes:evs.filter(e=>e.tipo==='cliente').length,
+    equipe_days:new Set(evs.filter(e=>e.tipo==='equipe').map(e=>e.date)).size,
+    planta:evs.filter(e=>e.planta===true||e.planta==='true').length,
+  };
 }
 function renderStats(){
-  const{total,clientes,equipe_days}=computeStats();
-  const fl=state.filter==='pollyanna'?' · Pollyanna':state.filter==='fernanda'?' · Fernanda':'';
+  const{total,clientes,equipe_days,planta}=computeStats();
+  const fl=state.filter==='pollyanna'?' · Pollyanna':state.filter==='fernanda'?' · Fernanda':state.filter==='luiz'?' · Luiz':'';
   document.getElementById('stats-row').innerHTML=`
     <div class="stat-card"><div class="stat-icon" style="background:#DDEAFF;"><i class="ti ti-calendar-event" style="color:#003087;font-size:18px;" aria-hidden="true"></i></div>
       <div><div class="stat-val">${total}</div><div class="stat-lbl">Reuniões${fl}</div></div></div>
     <div class="stat-card"><div class="stat-icon" style="background:#FFD6E7;"><i class="ti ti-briefcase" style="color:#D4537E;font-size:18px;" aria-hidden="true"></i></div>
       <div><div class="stat-val">${clientes}</div><div class="stat-lbl">Com clientes${fl}</div></div></div>
     <div class="stat-card"><div class="stat-icon" style="background:#D4FAEA;"><i class="ti ti-users" style="color:#1D9E75;font-size:18px;" aria-hidden="true"></i></div>
-      <div><div class="stat-val">${equipe_days}</div><div class="stat-lbl">Dias c/ equipe${fl}</div></div></div>`;
+      <div><div class="stat-val">${equipe_days}</div><div class="stat-lbl">Dias c/ equipe${fl}</div></div></div>
+    <div class="stat-card"><div class="stat-icon" style="background:#FFF3CD;"><i class="ti ti-building-factory" style="color:#7B5800;font-size:18px;" aria-hidden="true"></i></div>
+      <div><div class="stat-val">${planta}</div><div class="stat-lbl">Visitas em planta${fl}</div></div></div>`;
 }
 function setFilter(f){
   state.filter=f;
-  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active-all','active-pol','active-fer'));
+  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active-all','active-pol','active-fer','active-luiz'));
   const tab=document.querySelector(`[data-f="${f}"]`);
   if(f==='all') tab.classList.add('active-all');
   else if(f==='pollyanna') tab.classList.add('active-pol');
-  else tab.classList.add('active-fer');
+  else if(f==='fernanda') tab.classList.add('active-fer');
+  else if(f==='luiz') tab.classList.add('active-luiz');
   renderStats();renderGrid();renderMobileList();
 }
 function changeMonth(d){if(d<0){if(state.month===0){state.month=11;state.year--;}else state.month--;}else{if(state.month===11){state.month=0;state.year++;}else state.month++;}renderAll();}
@@ -626,7 +649,7 @@ function renderGrid(){
       const cv=C[`${ev.tipo}_${ev.mod}`]||C.outro_presencial;
       const rc=RC[ev.resp]||RC.ambas;
       html+=`<div class="event-pill" style="background:${cv.bg};color:${cv.fg};border-left:3px solid ${cv.bdr};">
-        <div class="pill-title"><span style="font-size:9px;">${cv.icon}</span><span style="overflow:hidden;text-overflow:ellipsis;flex:1;">${ev.title}</span></div>
+        <div class="pill-title"><span style="font-size:9px;">${cv.icon}</span><span style="overflow:hidden;text-overflow:ellipsis;flex:1;">${ev.title}</span>${ev.planta?'<span style="font-size:8px;margin-left:2px;" title="Visita em planta">🏭</span>':''}</div>
         <div class="pill-meta">
           ${ev.local?`<div class="pill-sub">${pinSvg()}${ev.local}</div>`:''}
           <span class="av ${rc.av}" style="width:12px;height:12px;font-size:6px;" title="${rc.lbl}">${rc.s}</span>
@@ -653,9 +676,10 @@ function renderMobileList(){
         const cv=C[`${ev.tipo}_${ev.mod}`]||C.outro_presencial;
         const rc=RC[ev.resp]||RC.ambas;
         return `<div class="mpill" style="background:${cv.bg};color:${cv.fg};border-left-color:${cv.bdr};">
-          <div class="mpill-title"><span>${cv.icon}</span><span>${ev.title}</span></div>
+          <div class="mpill-title"><span>${cv.icon}</span><span>${ev.title}</span>${ev.planta?'<span style="font-size:11px;margin-left:4px;" title="Visita em planta">🏭</span>':''}</div>
           <div class="mpill-meta">
             ${ev.local?`<span class="mpill-sub">${pinSvg()} ${ev.local}</span>`:''}
+            ${ev.planta&&ev.clientePlanta?`<span class="badge b-planta" style="font-size:9px;padding:1px 6px;">🏭 ${ev.clientePlanta}${ev.estadoCliente?' ('+ev.estadoCliente+')':''}</span>`:''}
             <span class="badge ${cv.bcls}" style="font-size:9px;padding:1px 6px;">${ev.mod==='online'?'Online':'Presencial'}</span>
             <span class="av ${rc.av}" style="width:16px;height:16px;font-size:7px;" title="${rc.lbl}">${rc.s}</span>
           </div></div>`;
@@ -691,6 +715,7 @@ function renderModal(){
               <span class="badge ${cv.bcls}">${cv.icon} ${ev.mod==='online'?'Online':'Presencial'}</span>
               <span class="badge ${ev.tipo==='equipe'?'b-eq-pr':ev.tipo==='cliente'?'b-cl-pr':'b-ou'}">${ev.tipo==='equipe'?'Equipe':ev.tipo==='cliente'?'Cliente':'Outro'}</span>
               <span class="badge ${rc.bc}">${userSvg()} ${rc.lbl}</span>
+              ${ev.planta?`<span class="badge b-planta">🏭 Visita em planta${ev.clientePlanta?' · '+ev.clientePlanta:''} ${ev.estadoCliente?'('+ev.estadoCliente+')':''}</span>`:''}
             </div>
             ${ev.desc?`<div style="font-size:11px;color:#999;margin-top:5px;">${ev.desc}</div>`:''}
           </div>
@@ -722,6 +747,7 @@ function renderModal(){
             <label class="rl ${r0==='pollyanna'?'s-pollyanna':''}" data-val="pollyanna"><span class="av av-p" style="width:16px;height:16px;font-size:8px;">P</span> Pollyanna</label>
             <label class="rl ${r0==='fernanda'?'s-fernanda':''}" data-val="fernanda"><span class="av av-f" style="width:16px;height:16px;font-size:8px;">F</span> Fernanda</label>
             <label class="rl ${r0==='ambas'?'s-ambas':''}" data-val="ambas"><span class="av av-pf" style="width:16px;height:16px;font-size:7px;">PF</span> Ambas</label>
+            <label class="rl ${r0==='luiz'?'s-luiz':''}" data-val="luiz"><span class="av av-l" style="width:16px;height:16px;font-size:8px;">L</span> Luiz</label>
           </div><input type="hidden" id="ev-resp" value="${r0}"></div>
         <div><label>Modalidade</label>
           <div class="radio-group" id="rmod">
@@ -735,6 +761,18 @@ function renderModal(){
             <label class="rl ${t0==='outro'?'s-outro':''}" data-val="outro">📅 Outro</label>
           </div><input type="hidden" id="ev-tipo" value="${t0}"></div>
         <div><label>Observações</label><textarea id="ev-desc" placeholder="Participantes, pauta...">${ev.desc||''}</textarea></div>
+        <div style="background:#FFF9E6;border:1px solid #F0C000;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <label style="text-transform:none;font-size:13px;font-weight:600;color:#7B5800;margin:0;">🏭 Visita em planta?</label>
+            <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;font-weight:600;color:#333;padding:5px 12px;border:2px solid ${ev.planta?'#F0C000':'#e0e0e0'};border-radius:8px;background:${ev.planta?'#FFF3CD':'#fff'};margin:0;" id="planta-toggle" onclick="togglePlanta()">
+              <input type="checkbox" id="ev-planta" style="width:auto;padding:0;border:none;accent-color:#F0C000;" ${ev.planta?'checked':''}> Sim
+            </label>
+          </div>
+          <div id="planta-fields" style="display:${ev.planta?'flex':'none'};flex-direction:column;gap:8px;">
+            <div><label>Cliente presente na visita</label><input id="ev-clientePlanta" type="text" placeholder="Nome do cliente" value="${ev.clientePlanta||''}"></div>
+            <div><label>Estado do cliente</label><input id="ev-estadoCliente" type="text" placeholder="Ex: SP, MG, RJ..." value="${ev.estadoCliente||''}"></div>
+          </div>
+        </div>
         <div class="btn-row">
           ${isEdit?`<button class="btn btn-danger" onclick="deleteEv('${ev.id}')">Excluir</button>`:''}
           <button class="btn" onclick="closeModal()">Cancelar</button>
@@ -752,6 +790,15 @@ function setRadio(gid,hid){
   });
 }
 function startEdit(id){const ev=state.events.find(e=>e.id===id);if(!ev)return;state.editEv=ev;state.selDate=ev.date;state.modalMode='edit';renderModal();}
+function togglePlanta(){
+  const cb=document.getElementById('ev-planta');
+  const fields=document.getElementById('planta-fields');
+  const toggle=document.getElementById('planta-toggle');
+  if(cb&&fields){
+    fields.style.display=cb.checked?'flex':'none';
+    if(toggle){toggle.style.borderColor=cb.checked?'#F0C000':'#e0e0e0';toggle.style.background=cb.checked?'#FFF3CD':'#fff';}
+  }
+}
 function closeModal(){if(state.modalMode==='edit'&&state.dayDate){state.modalMode='day';renderModal();return;}state.modalMode=null;renderModal();}
 function handleOverlayClick(e){if(e.target===document.getElementById('modal-wrap'))closeModal();}
 
