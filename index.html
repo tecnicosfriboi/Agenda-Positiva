@@ -319,6 +319,24 @@ const RC={
   ambas:    {lbl:'Ambas',    s:'PF', av:'av-pf', bc:'b-amb'},
   luiz:     {lbl:'Luiz',    s:'L',  av:'av-l',  bc:'b-luiz'},
 };
+// resp is now an array e.g. ['pollyanna','fernanda'] or legacy string
+function getRespArray(ev){
+  if(!ev.resp) return ['ambas'];
+  if(Array.isArray(ev.resp)) return ev.resp;
+  return [ev.resp]; // legacy string
+}
+function getRespLabel(ev){
+  const arr=getRespArray(ev);
+  if(arr.includes('pollyanna')&&arr.includes('fernanda')&&arr.includes('luiz')) return 'Todos';
+  return arr.map(r=>RC[r]?RC[r].lbl:r).join(' + ');
+}
+function getRespAvatars(ev,size,fontSize){
+  const arr=getRespArray(ev);
+  return arr.map(r=>{
+    const rc=RC[r]||RC.ambas;
+    return `<span class="av ${rc.av}" style="width:${size}px;height:${size}px;font-size:${fontSize}px;margin-left:-3px;border:1.5px solid #fff;" title="${rc.lbl}">${rc.s}</span>`;
+  }).join('');
+}
 
 const PDF_DEFAULTS=[
   {id:'j1', date:'2026-01-12',title:'Giga',               local:'SP',    tipo:'cliente',   mod:'online',    resp:'pollyanna',desc:''},
@@ -536,6 +554,9 @@ async function initFirebase(){
 async function saveEv(){
   const title=document.getElementById('ev-title').value.trim();
   if(!title){document.getElementById('ev-title').style.borderColor='#E24B4A';return;}
+  if(!window._currentResp||window._currentResp.length===0){
+    const warn=document.getElementById('resp-warning');if(warn)warn.style.display='block';return;
+  }
   const isEdit=state.modalMode==='edit';
   const newEv={
     id:isEdit?state.editEv.id:Date.now().toString(36)+Math.random().toString(36).slice(2),
@@ -543,7 +564,7 @@ async function saveEv(){
     date:document.getElementById('ev-date').value,
     time:document.getElementById('ev-time').value,
     local:document.getElementById('ev-local').value.trim(),
-    resp:document.getElementById('ev-resp').value,
+    resp:window._currentResp&&window._currentResp.length>0?[...window._currentResp]:['pollyanna'],
     mod:document.getElementById('ev-mod').value,
     tipo:document.getElementById('ev-tipo').value,
     desc:document.getElementById('ev-desc').value.trim(),
@@ -579,9 +600,10 @@ function todayStr(){const t=new Date();return dstr(t.getFullYear(),t.getMonth(),
 function evDate(d){return state.events.filter(e=>e.date===d);}
 function visible(ev){
   if(state.filter==='all') return true;
-  if(state.filter==='pollyanna') return ev.resp==='pollyanna'||ev.resp==='ambas';
-  if(state.filter==='fernanda') return ev.resp==='fernanda'||ev.resp==='ambas';
-  if(state.filter==='luiz') return ev.resp==='luiz';
+  const arr=getRespArray(ev);
+  if(state.filter==='pollyanna') return arr.includes('pollyanna')||arr.includes('ambas');
+  if(state.filter==='fernanda') return arr.includes('fernanda')||arr.includes('ambas');
+  if(state.filter==='luiz') return arr.includes('luiz');
   return true;
 }
 function filteredEvents(){return state.events.filter(visible);}
@@ -647,12 +669,11 @@ function renderGrid(){
     let html=`<div class="day-num">${cell.day}</div>`;
     evs.slice(0,2).forEach(ev=>{
       const cv=C[`${ev.tipo}_${ev.mod}`]||C.outro_presencial;
-      const rc=RC[ev.resp]||RC.ambas;
       html+=`<div class="event-pill" style="background:${cv.bg};color:${cv.fg};border-left:3px solid ${cv.bdr};">
         <div class="pill-title"><span style="font-size:9px;">${cv.icon}</span><span style="overflow:hidden;text-overflow:ellipsis;flex:1;">${ev.title}</span>${ev.planta?'<span style="font-size:8px;margin-left:2px;" title="Visita em planta">🏭</span>':''}</div>
         <div class="pill-meta">
           ${ev.local?`<div class="pill-sub">${pinSvg()}${ev.local}</div>`:''}
-          <span class="av ${rc.av}" style="width:12px;height:12px;font-size:6px;" title="${rc.lbl}">${rc.s}</span>
+          <span style="display:flex;align-items:center;">${getRespAvatars(ev,12,6)}</span>
         </div></div>`;
     });
     if(evs.length>2) html+=`<div class="more-link">+${evs.length-2} mais</div>`;
@@ -674,14 +695,13 @@ function renderMobileList(){
     let pillsHtml=evs.length===0?`<div class="mday-empty">Sem reuniões</div>`
       :evs.map(ev=>{
         const cv=C[`${ev.tipo}_${ev.mod}`]||C.outro_presencial;
-        const rc=RC[ev.resp]||RC.ambas;
         return `<div class="mpill" style="background:${cv.bg};color:${cv.fg};border-left-color:${cv.bdr};">
           <div class="mpill-title"><span>${cv.icon}</span><span>${ev.title}</span>${ev.planta?'<span style="font-size:11px;margin-left:4px;" title="Visita em planta">🏭</span>':''}</div>
           <div class="mpill-meta">
             ${ev.local?`<span class="mpill-sub">${pinSvg()} ${ev.local}</span>`:''}
             ${ev.planta&&ev.clientePlanta?`<span class="badge b-planta" style="font-size:9px;padding:1px 6px;">🏭 ${ev.clientePlanta}${ev.estadoCliente?' ('+ev.estadoCliente+')':''}</span>`:''}
             <span class="badge ${cv.bcls}" style="font-size:9px;padding:1px 6px;">${ev.mod==='online'?'Online':'Presencial'}</span>
-            <span class="av ${rc.av}" style="width:16px;height:16px;font-size:7px;" title="${rc.lbl}">${rc.s}</span>
+            <span style="display:flex;align-items:center;">${getRespAvatars(ev,16,7)}</span>
           </div></div>`;
       }).join('');
     row.innerHTML=`<div class="mday-date"><div class="mday-num">${i}</div><div class="mday-dow">${DAYS_LONG[dt.getDay()].slice(0,3)}</div></div>
@@ -705,7 +725,6 @@ function renderModal(){
     let items=evs.length===0?`<div style="text-align:center;color:#aaa;font-size:13px;padding:1rem 0;">Nenhuma reunião neste dia.</div>`
       :evs.map(ev=>{
         const cv=C[`${ev.tipo}_${ev.mod}`]||C.outro_presencial;
-        const rc=RC[ev.resp]||RC.ambas;
         return `<div class="ev-detail-item" style="border-left-color:${cv.bdr};">
           <div class="ev-detail-info">
             <div class="ev-detail-name">${ev.title}</div>
@@ -714,7 +733,7 @@ function renderModal(){
               ${ev.time?`<span class="badge b-loc">${clockSvg()} ${ev.time}</span>`:''}
               <span class="badge ${cv.bcls}">${cv.icon} ${ev.mod==='online'?'Online':'Presencial'}</span>
               <span class="badge ${ev.tipo==='equipe'?'b-eq-pr':ev.tipo==='cliente'?'b-cl-pr':'b-ou'}">${ev.tipo==='equipe'?'Equipe':ev.tipo==='cliente'?'Cliente':'Outro'}</span>
-              <span class="badge ${rc.bc}">${userSvg()} ${rc.lbl}</span>
+              <span class="badge b-pol" style="gap:3px;">${userSvg()} ${getRespLabel(ev)}</span>
               ${ev.planta?`<span class="badge b-planta">🏭 Visita em planta${ev.clientePlanta?' · '+ev.clientePlanta:''} ${ev.estadoCliente?'('+ev.estadoCliente+')':''}</span>`:''}
             </div>
             ${ev.desc?`<div style="font-size:11px;color:#999;margin-top:5px;">${ev.desc}</div>`:''}
@@ -733,7 +752,9 @@ function renderModal(){
   if(state.modalMode==='add'||state.modalMode==='edit'){
     const ev=state.editEv||{};
     const isEdit=state.modalMode==='edit';
-    const m0=ev.mod||'presencial',t0=ev.tipo||'cliente',r0=ev.resp||'ambas';
+    const m0=ev.mod||'presencial',t0=ev.tipo||'cliente';
+    const respArr0=getRespArray(ev);
+    window._currentResp=[...respArr0];
     box.innerHTML=`<div class="modal-header"><span class="modal-title">${isEdit?'Editar reunião':'Nova reunião'}</span><button class="modal-close" onclick="closeModal()">×</button></div>
       <div class="modal-body">
         <div><label>Título *</label><input id="ev-title" type="text" placeholder="Ex: Reunião Carrefour" value="${ev.title||''}"></div>
@@ -742,13 +763,14 @@ function renderModal(){
           <div><label>Horário</label><input id="ev-time" type="time" value="${ev.time||''}"></div>
         </div>
         <div><label>Localidade</label><input id="ev-local" type="text" placeholder="SP, RJ, MG..." value="${ev.local||''}"></div>
-        <div><label>Responsável</label>
+        <div><label>Responsável (pode selecionar mais de um)</label>
           <div class="radio-group" id="rresp">
-            <label class="rl ${r0==='pollyanna'?'s-pollyanna':''}" data-val="pollyanna"><span class="av av-p" style="width:16px;height:16px;font-size:8px;">P</span> Pollyanna</label>
-            <label class="rl ${r0==='fernanda'?'s-fernanda':''}" data-val="fernanda"><span class="av av-f" style="width:16px;height:16px;font-size:8px;">F</span> Fernanda</label>
-            <label class="rl ${r0==='ambas'?'s-ambas':''}" data-val="ambas"><span class="av av-pf" style="width:16px;height:16px;font-size:7px;">PF</span> Ambas</label>
-            <label class="rl ${r0==='luiz'?'s-luiz':''}" data-val="luiz"><span class="av av-l" style="width:16px;height:16px;font-size:8px;">L</span> Luiz</label>
-          </div><input type="hidden" id="ev-resp" value="${r0}"></div>
+            <label class="rl ${respArr0.includes('pollyanna')?'s-pollyanna':''}" id="rl-pollyanna" onclick="toggleResp('pollyanna')"><span class="av av-p" style="width:16px;height:16px;font-size:8px;">P</span> Pollyanna</label>
+            <label class="rl ${respArr0.includes('fernanda')?'s-fernanda':''}" id="rl-fernanda" onclick="toggleResp('fernanda')"><span class="av av-f" style="width:16px;height:16px;font-size:8px;">F</span> Fernanda</label>
+            <label class="rl ${respArr0.includes('luiz')?'s-luiz':''}" id="rl-luiz" onclick="toggleResp('luiz')"><span class="av av-l" style="width:16px;height:16px;font-size:8px;">L</span> Luiz</label>
+          </div>
+          <div id="resp-warning" style="display:none;font-size:11px;color:#E24B4A;margin-top:4px;">Selecione ao menos um responsável.</div>
+        </div>
         <div><label>Modalidade</label>
           <div class="radio-group" id="rmod">
             <label class="rl ${m0==='online'?'s-online':''}" data-val="online">💻 Online</label>
@@ -778,7 +800,7 @@ function renderModal(){
           <button class="btn" onclick="closeModal()">Cancelar</button>
           <button class="btn btn-primary" onclick="saveEv()">${isEdit?'Salvar':'Adicionar'}</button>
         </div></div>`;
-    ['rresp,ev-resp','rmod,ev-mod','rtipo,ev-tipo'].forEach(p=>{const[g,h]=p.split(',');setRadio(g,h);});
+    ['rmod,ev-mod','rtipo,ev-tipo'].forEach(p=>{const[g,h]=p.split(',');setRadio(g,h);});
   }
 }
 function setRadio(gid,hid){
@@ -790,6 +812,21 @@ function setRadio(gid,hid){
   });
 }
 function startEdit(id){const ev=state.events.find(e=>e.id===id);if(!ev)return;state.editEv=ev;state.selDate=ev.date;state.modalMode='edit';renderModal();}
+function toggleResp(val){
+  if(!window._currentResp) window._currentResp=[];
+  const idx=window._currentResp.indexOf(val);
+  if(idx>=0) window._currentResp.splice(idx,1);
+  else window._currentResp.push(val);
+  // update visual
+  ['pollyanna','fernanda','luiz'].forEach(r=>{
+    const el=document.getElementById('rl-'+r);
+    if(!el) return;
+    el.className='rl';
+    if(window._currentResp.includes(r)) el.classList.add('s-'+r);
+  });
+  const warn=document.getElementById('resp-warning');
+  if(warn) warn.style.display=window._currentResp.length===0?'block':'none';
+}
 function togglePlanta(){
   const cb=document.getElementById('ev-planta');
   const fields=document.getElementById('planta-fields');
@@ -913,7 +950,7 @@ function buildPDF(){
   });
   const tT=40;const cW2=[36,18,18,22,24,22,22];
   let tx=8;
-  ['Mês','Total','Clientes','Dias equipe','Pollyanna','Fernanda','Ambas'].forEach((c,i)=>{
+  ['Mês','Total','Clientes','Dias equipe','Pollyanna','Fernanda','Luiz'].forEach((c,i)=>{
     doc.setFillColor(34,34,34);doc.rect(tx,tT,cW2[i],7,'F');
     doc.setTextColor(255,255,255);doc.setFontSize(7);doc.setFont('helvetica','bold');doc.text(c,tx+cW2[i]/2,tT+4.5,{align:'center'});tx+=cW2[i];
   });
@@ -921,7 +958,7 @@ function buildPDF(){
     const px=`${state.year}-${String(mi+1).padStart(2,'0')}`;
     const me=yEvs.filter(e=>e.date.startsWith(px));
     const rd=[mn,me.length,me.filter(e=>e.tipo==='cliente').length,new Set(me.filter(e=>e.tipo==='equipe').map(e=>e.date)).size,
-      me.filter(e=>e.resp==='pollyanna').length,me.filter(e=>e.resp==='fernanda').length,me.filter(e=>e.resp==='ambas').length];
+      me.filter(e=>getRespArray(e).includes('pollyanna')).length,me.filter(e=>getRespArray(e).includes('fernanda')).length,me.filter(e=>getRespArray(e).includes('luiz')).length];
     const ry=tT+7+mi*8.5;
     doc.setFillColor(mi%2===0?255:248,mi%2===0?255:248,mi%2===0?255:248);doc.rect(8,ry,cW2.reduce((a,b)=>a+b,0),8,'F');
     doc.setDrawColor(235,235,235);doc.setLineWidth(0.1);doc.rect(8,ry,cW2.reduce((a,b)=>a+b,0),8,'S');
