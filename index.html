@@ -163,22 +163,167 @@ textarea{resize:vertical;min-height:70px;}
 .fab:hover{background:#002066;}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* ── MOBILE APP LAYOUT ── */
+.mob-header{display:none;}
+.mob-nav{display:none;}
+.mob-screen{display:none;}
+.mob-fab{display:none;}
+
 @media(max-width:600px){
-  .topbar-brand-name{font-size:13px;}
-  .topbar-tag{font-size:9px;padding:2px 5px;}
-  .export-label,.sync-label{display:none;}
-  .main{padding:1rem 0.6rem 5rem;}
-  .stats-row{grid-template-columns:repeat(2,1fr);gap:8px;}
-  .stat-card{padding:10px 13px;}
-  .stat-val{font-size:22px;}
-  .filter-label{display:none;}
-  .ftab{font-size:12px;padding:6px 14px;}
-  .grid-wrap{display:none;}
-  .legend{display:none;}
-  .mobile-list{display:block;padding:8px 10px 14px;}
-  .btn-add{display:none!important;}
-  .fab{display:flex;}
-  .modal{border-radius:20px 20px 0 0;max-height:95vh;}
+  /* hide desktop elements */
+  .topbar{display:none;}
+  .main{display:none;}
+  .fab{display:none;}
+  .modal-wrap{display:none!important;}
+
+  body{background:#F0F4FF;overflow:hidden;height:100vh;}
+
+  /* ── Mobile header ── */
+  .mob-header{
+    display:flex;align-items:center;justify-content:space-between;
+    background:linear-gradient(135deg,#001F6B 0%,#003087 60%,#004DB8 100%);
+    padding:0 16px;padding-top:env(safe-area-inset-top,0);
+    height:calc(56px + env(safe-area-inset-top,0));
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    box-shadow:0 2px 20px rgba(0,31,107,.5);
+  }
+  .mob-header-left{display:flex;flex-direction:column;justify-content:center;}
+  .mob-header-title{color:#fff;font-size:15px;font-weight:700;letter-spacing:-.02em;line-height:1.1;}
+  .mob-header-sub{color:rgba(255,255,255,.6);font-size:10px;font-weight:500;margin-top:1px;}
+  .mob-header-right{display:flex;align-items:center;gap:10px;}
+  .mob-sync{width:7px;height:7px;border-radius:50%;background:#1D9E75;flex-shrink:0;}
+  .mob-sync.syncing{background:#EF9F27;animation:pulse .8s infinite;}
+  .mob-sync.error{background:#E24B4A;}
+  .mob-header-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:6px 10px;color:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;}
+
+  /* ── App shell ── */
+  .mob-shell{
+    position:fixed;inset:0;
+    padding-top:calc(56px + env(safe-area-inset-top,0));
+    padding-bottom:calc(60px + env(safe-area-inset-bottom,0));
+    overflow:hidden;
+    display:flex;flex-direction:column;
+  }
+
+  /* ── Screens ── */
+  .mob-screen{
+    display:none;flex-direction:column;flex:1;overflow:hidden;
+    position:absolute;top:0;left:0;right:0;bottom:0;
+  }
+  .mob-screen.active{display:flex;}
+  .mob-screen-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px;}
+
+  /* ── AGENDA SCREEN ── */
+  .mob-month-nav{
+    background:#fff;display:flex;align-items:center;justify-content:space-between;
+    padding:10px 16px;border-bottom:1px solid #E8EEF8;
+  }
+  .mob-month-title{font-size:16px;font-weight:700;color:#001F6B;}
+  .mob-month-btn{background:#F0F4FF;border:none;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#003087;font-size:16px;}
+  .mob-month-today{background:#003087;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;}
+
+  /* mini week strip */
+  .mob-week-strip{background:#fff;border-bottom:1px solid #E8EEF8;padding:6px 12px 8px;}
+  .mob-week-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+  .mob-week-day{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 2px;border-radius:10px;transition:background .1s;}
+  .mob-week-day:hover{background:#F0F4FF;}
+  .mob-week-day.selected{background:#003087;}
+  .mob-week-day.today .mob-wd-num{background:#E24B4A;color:#fff;}
+  .mob-wd-label{font-size:9px;font-weight:700;color:#AAB4CC;text-transform:uppercase;letter-spacing:.04em;}
+  .mob-week-day.selected .mob-wd-label{color:rgba(255,255,255,.7);}
+  .mob-wd-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#111;}
+  .mob-week-day.selected .mob-wd-num{background:rgba(255,255,255,.2);color:#fff;}
+  .mob-wd-dot{width:4px;height:4px;border-radius:50%;background:transparent;}
+  .mob-week-day.has-ev .mob-wd-dot{background:#003087;}
+  .mob-week-day.selected.has-ev .mob-wd-dot{background:rgba(255,255,255,.7);}
+
+  /* day agenda list */
+  .mob-day-header{padding:12px 16px 6px;display:flex;align-items:center;justify-content:space-between;}
+  .mob-day-label{font-size:13px;font-weight:700;color:#001F6B;}
+  .mob-day-count{font-size:11px;color:#888;background:#F0F4FF;padding:2px 8px;border-radius:20px;}
+  .mob-ev-card{margin:0 12px 10px;background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,48,135,.08);overflow:hidden;border:1px solid #E8EEF8;cursor:pointer;transition:transform .1s,box-shadow .1s;}
+  .mob-ev-card:active{transform:scale(.98);box-shadow:0 1px 4px rgba(0,48,135,.06);}
+  .mob-ev-card-inner{display:flex;align-items:stretch;}
+  .mob-ev-bar{width:4px;flex-shrink:0;border-radius:2px 0 0 2px;}
+  .mob-ev-body{flex:1;padding:12px 14px;}
+  .mob-ev-title{font-size:14px;font-weight:700;color:#111;margin-bottom:5px;line-height:1.2;}
+  .mob-ev-chips{display:flex;flex-wrap:wrap;gap:5px;align-items:center;}
+  .mob-chip{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;display:inline-flex;align-items:center;gap:3px;}
+  .mob-chip-loc{background:#F0F4FF;color:#003087;}
+  .mob-chip-mod{background:#EAF3DE;color:#1D5C2A;}
+  .mob-chip-tipo{background:#FFF3CD;color:#7B5800;}
+  .mob-chip-planta{background:#FFF3CD;color:#7B5800;border:1px solid #F0C000;}
+  .mob-ev-resp{display:flex;align-items:center;gap:4px;margin-top:7px;}
+  .mob-no-ev{padding:32px 16px;text-align:center;}
+  .mob-no-ev-icon{font-size:36px;opacity:.3;margin-bottom:8px;}
+  .mob-no-ev-text{font-size:13px;color:#AAB;font-weight:500;}
+  .mob-add-day-btn{margin:4px 12px 12px;background:#F0F4FF;border:1.5px dashed #C8D9F5;border-radius:12px;padding:12px;text-align:center;cursor:pointer;color:#003087;font-size:13px;font-weight:600;font-family:inherit;width:calc(100% - 24px);}
+
+  /* ── STATS SCREEN ── */
+  .mob-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 14px 0;}
+  .mob-stat-card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,48,135,.07);border:1px solid #E8EEF8;}
+  .mob-stat-val{font-size:32px;font-weight:800;line-height:1;margin-bottom:4px;}
+  .mob-stat-lbl{font-size:11px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
+  .mob-stat-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+
+  /* filter chips in stats */
+  .mob-filter-row{display:flex;gap:8px;padding:14px 14px 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .mob-filter-row::-webkit-scrollbar{display:none;}
+  .mob-fchip{flex-shrink:0;padding:7px 16px;border-radius:30px;border:2px solid #ddd;background:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;}
+  .mob-fchip.active-all{background:#003087;color:#fff;border-color:#003087;}
+  .mob-fchip.active-pol{background:#1565C0;color:#fff;border-color:#1565C0;}
+  .mob-fchip.active-fer{background:#D4537E;color:#fff;border-color:#D4537E;}
+  .mob-fchip.active-luiz{background:#1D9E75;color:#fff;border-color:#1D9E75;}
+
+  /* ── BOTTOM NAV ── */
+  .mob-nav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;z-index:100;
+    background:#fff;border-top:1px solid #E8EEF8;
+    padding-bottom:env(safe-area-inset-bottom,0);
+    box-shadow:0 -4px 20px rgba(0,48,135,.1);
+  }
+  .mob-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 6px;cursor:pointer;border:none;background:none;font-family:inherit;color:#AAB4CC;transition:color .15s;}
+  .mob-nav-item.active{color:#003087;}
+  .mob-nav-item i{font-size:22px;margin-bottom:2px;}
+  .mob-nav-item span{font-size:10px;font-weight:600;}
+  .mob-nav-item.nav-add{color:#fff;}
+  .mob-nav-add-btn{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#003087,#004DB8);border:none;color:#fff;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,48,135,.5);margin-top:-20px;font-family:inherit;}
+
+  /* ── MODAL as bottom sheet ── */
+  .mob-modal-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:flex-end;justify-content:center;}
+  .mob-modal-wrap.open{display:flex;}
+  .mob-modal{background:#fff;border-radius:24px 24px 0 0;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 -8px 40px rgba(0,0,0,.2);padding-bottom:env(safe-area-inset-bottom,0);}
+  .mob-modal-drag{width:36px;height:4px;background:#E0E0E0;border-radius:2px;margin:12px auto 4px;}
+  .mob-modal-header{display:flex;align-items:center;justify-content:space-between;padding:4px 16px 12px;border-bottom:1px solid #F0F4FF;}
+  .mob-modal-title{font-size:17px;font-weight:700;color:#111;}
+  .mob-modal-close{background:#F0F4FF;border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:#666;}
+  .mob-modal-body{padding:14px 16px;display:flex;flex-direction:column;gap:14px;padding-bottom:30px;}
+  .mob-form-label{font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;display:block;}
+  .mob-form-input{width:100%;font-size:16px;padding:12px 14px;border:1.5px solid #E0E8F8;border-radius:12px;background:#fff;color:#111;font-family:inherit;outline:none;-webkit-appearance:none;}
+  .mob-form-input:focus{border-color:#003087;box-shadow:0 0 0 3px rgba(0,48,135,.1);}
+  .mob-form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .mob-radio-group{display:flex;gap:8px;flex-wrap:wrap;}
+  .mob-rl{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;font-weight:600;color:#333;padding:9px 14px;border:2px solid #E0E8F8;border-radius:12px;background:#fff;transition:all .12s;}
+  .mob-rl.s-pollyanna{border-color:#1565C0;background:#DDEAFF;color:#003087;}
+  .mob-rl.s-fernanda{border-color:#D4537E;background:#FBEAF0;color:#72243E;}
+  .mob-rl.s-luiz{border-color:#1D9E75;background:#D4FAEA;color:#085041;}
+  .mob-rl.s-online{border-color:#1D9E75;background:#D4FAEA;color:#085041;}
+  .mob-rl.s-presencial{border-color:#BA7517;background:#FAEEDA;color:#633806;}
+  .mob-rl.s-equipe{border-color:#1565C0;background:#DDEAFF;color:#003087;}
+  .mob-rl.s-cliente{border-color:#D4537E;background:#FBEAF0;color:#72243E;}
+  .mob-rl.s-outro{border-color:#888;background:#F1EFE8;color:#444;}
+  .mob-btn-row{display:flex;gap:10px;padding-top:4px;}
+  .mob-btn{flex:1;padding:14px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;border:2px solid #ddd;background:#fff;color:#333;font-family:inherit;}
+  .mob-btn-primary{background:#003087;color:#fff;border-color:#003087;}
+  .mob-btn-danger{background:none;border-color:#E24B4A;color:#E24B4A;}
+  .mob-planta-box{background:#FFFBEC;border:1.5px solid #F0C000;border-radius:12px;padding:14px;}
+  .mob-planta-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+  .mob-planta-label{font-size:14px;font-weight:600;color:#7B5800;}
+  .mob-toggle-sw{width:44px;height:26px;border-radius:13px;background:#ddd;position:relative;transition:background .2s;cursor:pointer;border:none;flex-shrink:0;}
+  .mob-toggle-sw.on{background:#1D9E75;}
+  .mob-toggle-sw::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+  .mob-toggle-sw.on::after{transform:translateX(18px);}
+  .mob-planta-fields{display:none;margin-top:12px;display:flex;flex-direction:column;gap:10px;}
 }
 @media(min-width:601px) and (max-width:780px){
   .day-cell{min-height:80px;}
@@ -273,10 +418,82 @@ textarea{resize:vertical;min-height:70px;}
   </div>
 </div>
 
-<button class="fab" onclick="openAdd()" aria-label="Nova reunião">+</button>
-
+<!-- Desktop modal -->
 <div class="modal-wrap" id="modal-wrap" onclick="handleOverlayClick(event)">
   <div class="modal" id="modal-box"></div>
+</div>
+
+<!-- ══ MOBILE APP SHELL ══ -->
+<div class="mob-header" id="mob-header">
+  <div class="mob-header-left">
+    <div class="mob-header-title">Agenda Positiva</div>
+    <div class="mob-header-sub">Friboi / JBS · Calendário de Reuniões</div>
+  </div>
+  <div class="mob-header-right">
+    <span class="mob-sync" id="mob-sync"></span>
+    <button class="mob-header-btn" onclick="mobExportPDF()">
+      <i class="ti ti-file-type-pdf" style="font-size:14px;" aria-hidden="true"></i> PDF
+    </button>
+  </div>
+</div>
+
+<div class="mob-shell" id="mob-shell" style="padding-top:calc(56px + env(safe-area-inset-top,0));padding-bottom:calc(60px + env(safe-area-inset-bottom,0));">
+
+  <!-- SCREEN: AGENDA -->
+  <div class="mob-screen active" id="mob-screen-agenda">
+    <div class="mob-month-nav">
+      <button class="mob-month-btn" onclick="mobChangeMonth(-1)"><i class="ti ti-chevron-left" aria-hidden="true"></i></button>
+      <span class="mob-month-title" id="mob-month-title"></span>
+      <div style="display:flex;gap:6px;">
+        <button class="mob-month-today" onclick="mobGoToday()">Hoje</button>
+        <button class="mob-month-btn" onclick="mobChangeMonth(1)"><i class="ti ti-chevron-right" aria-hidden="true"></i></button>
+      </div>
+    </div>
+    <div class="mob-week-strip">
+      <div class="mob-week-days" id="mob-week-days"></div>
+    </div>
+    <div class="mob-screen-scroll" id="mob-agenda-scroll">
+      <div id="mob-agenda-list"></div>
+    </div>
+  </div>
+
+  <!-- SCREEN: STATS -->
+  <div class="mob-screen" id="mob-screen-stats">
+    <div class="mob-screen-scroll">
+      <div class="mob-filter-row" id="mob-filter-row">
+        <button class="mob-fchip active-all" data-f="all" onclick="mobSetFilter('all')"><i class="ti ti-users" style="font-size:14px;" aria-hidden="true"></i> Todas</button>
+        <button class="mob-fchip" data-f="pollyanna" onclick="mobSetFilter('pollyanna')"><span class="av av-p" style="width:18px;height:18px;font-size:8px;">P</span> Pollyanna</button>
+        <button class="mob-fchip" data-f="fernanda" onclick="mobSetFilter('fernanda')"><span class="av av-f" style="width:18px;height:18px;font-size:8px;">F</span> Fernanda</button>
+        <button class="mob-fchip" data-f="luiz" onclick="mobSetFilter('luiz')"><span class="av av-l" style="width:18px;height:18px;font-size:8px;">L</span> Luiz</button>
+      </div>
+      <div class="mob-stats-grid" id="mob-stats-grid"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Bottom nav -->
+<nav class="mob-nav">
+  <button class="mob-nav-item active" id="mob-nav-agenda" onclick="mobSwitchScreen('agenda')">
+    <i class="ti ti-calendar" aria-hidden="true"></i>
+    <span>Agenda</span>
+  </button>
+  <button class="mob-nav-item" id="mob-nav-stats" onclick="mobSwitchScreen('stats')">
+    <i class="ti ti-chart-bar" aria-hidden="true"></i>
+    <span>Resumo</span>
+  </button>
+  <button class="mob-nav-item" onclick="mobOpenAdd(null)" style="padding-top:0;">
+    <div class="mob-nav-add-btn"><i class="ti ti-plus" aria-hidden="true"></i></div>
+  </button>
+  <button class="mob-nav-item" id="mob-nav-filter" onclick="mobSwitchScreen('stats')">
+    <i class="ti ti-filter" aria-hidden="true"></i>
+    <span>Filtros</span>
+  </button>
+</nav>
+
+<!-- Mobile bottom sheet modal -->
+<div class="mob-modal-wrap" id="mob-modal-wrap">
+  <div class="mob-modal" id="mob-modal-box"></div>
 </div>
 
 <script>
@@ -612,8 +829,8 @@ function evDate(d){return state.events.filter(e=>e.date===d);}
 function visible(ev){
   if(state.filter==='all') return true;
   const arr=getRespArray(ev);
-  if(state.filter==='pollyanna') return arr.includes('pollyanna')||arr.includes('ambas');
-  if(state.filter==='fernanda') return arr.includes('fernanda')||arr.includes('ambas');
+  if(state.filter==='pollyanna') return arr.includes('pollyanna');
+  if(state.filter==='fernanda') return arr.includes('fernanda');
   if(state.filter==='luiz') return arr.includes('luiz');
   return true;
 }
@@ -1139,9 +1356,450 @@ function buildPDF(){
   btn.disabled=false;
 }
 
+/* ══════════════════════════════════════════════
+   MOBILE APP LOGIC
+   ══════════════════════════════════════════════ */
+const isMobile=()=>window.innerWidth<=600;
+
+// sync status mirror for mobile
+const _origSetSync=setSyncStatus;
+function setSyncStatus(status,label){
+  _origSetSync(status,label);
+  const d=document.getElementById('mob-sync');
+  if(d){d.className='mob-sync'+(status==='syncing'?' syncing':status==='error'?' error':'');}
+}
+
+let mobState={
+  year:2026, month:5, filter:'all',
+  selectedDate: null,
+};
+
+function mobToday(){const t=new Date();return dstr(t.getFullYear(),t.getMonth(),t.getDate());}
+
+function mobSwitchScreen(name){
+  document.querySelectorAll('.mob-screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.mob-nav-item').forEach(b=>b.classList.remove('active'));
+  const scr=document.getElementById('mob-screen-'+name);
+  const nav=document.getElementById('mob-nav-'+name);
+  if(scr) scr.classList.add('active');
+  if(nav) nav.classList.add('active');
+  if(name==='agenda') mobRenderAgenda();
+  if(name==='stats') mobRenderStats();
+}
+
+function mobSetFilter(f){
+  mobState.filter=f;
+  state.filter=f; // sync with desktop
+  document.querySelectorAll('.mob-fchip').forEach(b=>b.classList.remove('active-all','active-pol','active-fer','active-luiz'));
+  const chip=document.querySelector(`.mob-fchip[data-f="${f}"]`);
+  if(chip) chip.classList.add(f==='all'?'active-all':f==='pollyanna'?'active-pol':f==='fernanda'?'active-fer':'active-luiz');
+  mobRenderStats();
+  mobRenderAgenda();
+}
+
+function mobChangeMonth(d){
+  if(d<0){if(mobState.month===0){mobState.month=11;mobState.year--;}else mobState.month--;}
+  else{if(mobState.month===11){mobState.month=0;mobState.year++;}else mobState.month++;}
+  state.year=mobState.year; state.month=mobState.month;
+  mobState.selectedDate=null;
+  mobRenderAgenda();
+}
+
+function mobGoToday(){
+  const t=new Date();
+  mobState.year=t.getFullYear(); mobState.month=t.getMonth();
+  mobState.selectedDate=dstr(t.getFullYear(),t.getMonth(),t.getDate());
+  state.year=mobState.year; state.month=mobState.month;
+  mobRenderAgenda();
+}
+
+function mobSelectDay(ds){
+  mobState.selectedDate=ds;
+  mobRenderAgenda();
+  // scroll to selected day
+  const el=document.getElementById('mob-day-'+ds);
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function mobRenderAgenda(){
+  if(!isMobile()) return;
+  const y=mobState.year, m=mobState.month;
+  const MONTHS=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const DAYS_S=['D','S','T','Q','Q','S','S'];
+
+  // month title
+  const mtEl=document.getElementById('mob-month-title');
+  if(mtEl) mtEl.textContent=MONTHS[m]+' '+y;
+
+  // week strip — show current month days split by week, cycling
+  const dim=new Date(y,m+1,0).getDate();
+  const today=mobToday();
+  const selDate=mobState.selectedDate||today;
+  const wd=document.getElementById('mob-week-days');
+  if(!wd) return;
+  wd.innerHTML='';
+
+  // show all days of month in a 7-column scrollable week row
+  // find week of selected date
+  const selDay=parseInt(selDate.split('-')[2])||1;
+  const selDayObj=new Date(y,m,selDay);
+  const weekStart=selDay-selDayObj.getDay();
+  const weekDays=[];
+  for(let i=0;i<7;i++){
+    const d2=weekStart+i;
+    if(d2<1||d2>dim) weekDays.push(null);
+    else weekDays.push(d2);
+  }
+
+  weekDays.forEach((day,wi)=>{
+    const d2El=document.createElement('div');
+    if(!day){
+      d2El.className='mob-week-day';
+      d2El.innerHTML=`<span class="mob-wd-label">${DAYS_S[wi]}</span><span class="mob-wd-num" style="color:#ccc;">·</span><span class="mob-wd-dot"></span>`;
+    } else {
+      const ds2=dstr(y,m,day);
+      const evs=state.events.filter(e=>e.date===ds2&&visible(e));
+      const isToday=ds2===today;
+      const isSel=ds2===selDate;
+      d2El.className='mob-week-day'+(isToday?' today':'')+(isSel?' selected':'')+(evs.length?' has-ev':'');
+      d2El.innerHTML=`<span class="mob-wd-label">${DAYS_S[wi]}</span><span class="mob-wd-num">${day}</span><span class="mob-wd-dot"></span>`;
+      d2El.onclick=()=>mobSelectDay(ds2);
+    }
+    wd.appendChild(d2El);
+  });
+
+  // agenda list — all days of month
+  const list=document.getElementById('mob-agenda-list');
+  if(!list) return;
+  list.innerHTML='';
+
+  for(let day=1;day<=dim;day++){
+    const ds2=dstr(y,m,day);
+    const evs=state.events.filter(e=>e.date===ds2&&visible(e));
+    const dt=new Date(y,m,day);
+    const isToday=ds2===today;
+    const isSel=ds2===selDate;
+    const DAYS_LONG=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+
+    const section=document.createElement('div');
+    section.id='mob-day-'+ds2;
+
+    // day header
+    const dayHdr=document.createElement('div');
+    dayHdr.className='mob-day-header';
+    dayHdr.innerHTML=`<span class="mob-day-label" style="${isToday?'color:#E24B4A;':''}">${DAYS_LONG[dt.getDay()]}, ${day}</span>
+      ${evs.length?`<span class="mob-day-count">${evs.length} reunião${evs.length>1?'ões':''}</span>`:''}`;
+    section.appendChild(dayHdr);
+
+    if(evs.length===0){
+      const empty=document.createElement('div');
+      empty.style.cssText='padding:4px 16px 12px;';
+      empty.innerHTML=`<span style="font-size:12px;color:#CCC;font-weight:500;">Sem reuniões</span>`;
+      section.appendChild(empty);
+    } else {
+      evs.forEach(ev=>{
+        const cv=C[`${ev.tipo}_${ev.mod}`]||C.outro_presencial;
+        const card=document.createElement('div');
+        card.className='mob-ev-card';
+        card.onclick=()=>mobOpenDay(ds2);
+        const respArr=getRespArray(ev);
+        const respAvatars=respArr.map(r=>{
+          const rc=RC[r]||RC.ambas;
+          return `<span class="av ${rc.av}" style="width:20px;height:20px;font-size:8px;margin-right:-4px;border:2px solid #fff;" title="${rc.lbl}">${rc.s}</span>`;
+        }).join('');
+        const tipoLabel=ev.tipo==='equipe'?'Equipe':ev.tipo==='cliente'?'Cliente':'Outro';
+        card.innerHTML=`<div class="mob-ev-card-inner">
+          <div class="mob-ev-bar" style="background:${cv.bdr};"></div>
+          <div class="mob-ev-body">
+            <div class="mob-ev-title">${ev.title}</div>
+            <div class="mob-ev-chips">
+              ${ev.local?`<span class="mob-chip mob-chip-loc"><i class="ti ti-map-pin" style="font-size:10px;" aria-hidden="true"></i>${ev.local}</span>`:''}
+              <span class="mob-chip mob-chip-mod">${ev.mod==='online'?'Online':'Presencial'}</span>
+              <span class="mob-chip mob-chip-tipo">${tipoLabel}</span>
+              ${ev.planta?`<span class="mob-chip mob-chip-planta">Planta${ev.clientePlanta?' · '+ev.clientePlanta:''}</span>`:''}
+            </div>
+            <div class="mob-ev-resp">${respAvatars}</div>
+          </div>
+        </div>`;
+        section.appendChild(card);
+      });
+    }
+
+    const addBtn=document.createElement('button');
+    addBtn.className='mob-add-day-btn';
+    addBtn.innerHTML='+ Adicionar reunião neste dia';
+    addBtn.onclick=()=>mobOpenAdd(ds2);
+    if(isSel) section.appendChild(addBtn);
+
+    list.appendChild(section);
+  }
+
+  // auto-scroll to selected date
+  setTimeout(()=>{
+    const el=document.getElementById('mob-day-'+selDate);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  },80);
+}
+
+function mobRenderStats(){
+  if(!isMobile()) return;
+  const evs=state.events.filter(visible);
+  const total=evs.length;
+  const clientes=evs.filter(e=>e.tipo==='cliente').length;
+  const equipe=new Set(evs.filter(e=>e.tipo==='equipe').map(e=>e.date)).size;
+  const planta=evs.filter(e=>e.planta===true||e.planta==='true').length;
+  const fl=state.filter==='pollyanna'?' · Pollyanna':state.filter==='fernanda'?' · Fernanda':state.filter==='luiz'?' · Luiz':'';
+  const grid=document.getElementById('mob-stats-grid');
+  if(!grid) return;
+  grid.innerHTML=`
+    <div class="mob-stat-card">
+      <div class="mob-stat-icon" style="background:#DDEAFF;"><i class="ti ti-calendar-event" style="color:#003087;font-size:20px;" aria-hidden="true"></i></div>
+      <div class="mob-stat-val" style="color:#003087;">${total}</div>
+      <div class="mob-stat-lbl">Reuniões${fl}</div>
+    </div>
+    <div class="mob-stat-card">
+      <div class="mob-stat-icon" style="background:#FFD6E7;"><i class="ti ti-briefcase" style="color:#D4537E;font-size:20px;" aria-hidden="true"></i></div>
+      <div class="mob-stat-val" style="color:#D4537E;">${clientes}</div>
+      <div class="mob-stat-lbl">Com clientes</div>
+    </div>
+    <div class="mob-stat-card">
+      <div class="mob-stat-icon" style="background:#D4FAEA;"><i class="ti ti-users" style="color:#1D9E75;font-size:20px;" aria-hidden="true"></i></div>
+      <div class="mob-stat-val" style="color:#1D9E75;">${equipe}</div>
+      <div class="mob-stat-lbl">Dias equipe</div>
+    </div>
+    <div class="mob-stat-card">
+      <div class="mob-stat-icon" style="background:#FFF3CD;"><i class="ti ti-building-factory-2" style="color:#7B5800;font-size:20px;" aria-hidden="true"></i></div>
+      <div class="mob-stat-val" style="color:#7B5800;">${planta}</div>
+      <div class="mob-stat-lbl">Visitas em planta</div>
+    </div>`;
+}
+
+function mobOpenDay(ds){
+  const evs=state.events.filter(e=>e.date===ds&&visible(e));
+  const [y,m,day]=ds.split('-');
+  const MONTHS_PT=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const lbl=`${parseInt(day)} de ${MONTHS_PT[parseInt(m)-1]}`;
+  let items=evs.length===0
+    ?`<div style="text-align:center;padding:24px;color:#aaa;"><div style="font-size:32px;opacity:.4;margin-bottom:8px;">📅</div><div style="font-size:14px;">Sem reuniões neste dia</div></div>`
+    :evs.map(ev=>{
+      const cv=C[`${ev.tipo}_${ev.mod}`]||C.outro_presencial;
+      const respArr=getRespArray(ev);
+      const avatars=respArr.map(r=>{const rc=RC[r]||RC.pollyanna;return `<span class="av ${rc.av}" style="width:22px;height:22px;font-size:9px;margin-right:-4px;border:2px solid #fff;">${rc.s}</span>`;}).join('');
+      return `<div style="background:#F8FAFF;border-radius:14px;overflow:hidden;border:1px solid #E8EEF8;display:flex;align-items:stretch;margin-bottom:10px;">
+        <div style="width:4px;background:${cv.bdr};flex-shrink:0;"></div>
+        <div style="flex:1;padding:12px 14px;">
+          <div style="font-size:15px;font-weight:700;color:#111;margin-bottom:6px;">${ev.title}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;">
+            ${ev.local?`<span class="mob-chip mob-chip-loc"><i class="ti ti-map-pin" style="font-size:10px;" aria-hidden="true"></i>${ev.local}</span>`:''}
+            ${ev.time?`<span class="mob-chip" style="background:#EEE;color:#333;">${ev.time}</span>`:''}
+            <span class="mob-chip mob-chip-mod">${ev.mod==='online'?'Online':'Presencial'}</span>
+            <span class="mob-chip mob-chip-tipo">${ev.tipo==='equipe'?'Equipe':ev.tipo==='cliente'?'Cliente':'Outro'}</span>
+            ${ev.planta?`<span class="mob-chip mob-chip-planta">Planta${ev.clientePlanta?' · '+ev.clientePlanta+(ev.estadoCliente?' ('+ev.estadoCliente+')':''):''}</span>`:''}
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;">${avatars}</div>
+            <div style="display:flex;gap:6px;">
+              <button onclick="mobStartEdit('${ev.id}')" style="background:#F0F4FF;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:#003087;cursor:pointer;font-family:inherit;">Editar</button>
+              <button onclick="mobDeleteEv('${ev.id}')" style="background:#FFF0F0;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:#E24B4A;cursor:pointer;font-family:inherit;">Excluir</button>
+            </div>
+          </div>
+          ${ev.desc?`<div style="font-size:12px;color:#999;margin-top:6px;">${ev.desc}</div>`:''}
+        </div>
+      </div>`;
+    }).join('');
+
+  const wrap=document.getElementById('mob-modal-wrap');
+  const box=document.getElementById('mob-modal-box');
+  box.innerHTML=`<div class="mob-modal-drag"></div>
+    <div class="mob-modal-header">
+      <span class="mob-modal-title">${lbl}</span>
+      <button class="mob-modal-close" onclick="mobCloseModal()">✕</button>
+    </div>
+    <div class="mob-modal-body">
+      ${items}
+      <button onclick="mobOpenAdd('${ds}')" style="width:100%;padding:14px;background:#F0F4FF;border:1.5px dashed #C8D9F5;border-radius:12px;color:#003087;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">+ Adicionar reunião neste dia</button>
+    </div>`;
+  wrap.classList.add('open');
+  wrap.onclick=(e)=>{if(e.target===wrap)mobCloseModal();};
+}
+
+function mobCloseModal(){
+  document.getElementById('mob-modal-wrap').classList.remove('open');
+  mobRenderAgenda();
+}
+
+function mobOpenAdd(ds){
+  mobShowForm(null, ds||mobToday());
+}
+
+function mobStartEdit(id){
+  const ev=state.events.find(e=>e.id===id);
+  if(ev) mobShowForm(ev, ev.date);
+}
+
+function mobDeleteEv(id){
+  if(!confirm('Excluir esta reunião?')) return;
+  state.events=state.events.filter(e=>e.id!==id);
+  if(firebaseReady){fbDelete(`events/${id}`);fbMarkDeleted(id);}
+  mobCloseModal();
+}
+
+function mobShowForm(ev, ds){
+  const isEdit=!!ev;
+  if(!ev) ev={};
+  const respArr0=getRespArray(ev).filter(r=>r!=='ambas');
+  window._currentResp=[...respArr0];
+  const m0=ev.mod||'presencial', t0=ev.tipo||'cliente';
+
+  const wrap=document.getElementById('mob-modal-wrap');
+  const box=document.getElementById('mob-modal-box');
+  box.innerHTML=`<div class="mob-modal-drag"></div>
+    <div class="mob-modal-header">
+      <span class="mob-modal-title">${isEdit?'Editar reunião':'Nova reunião'}</span>
+      <button class="mob-modal-close" onclick="mobCloseModal()">✕</button>
+    </div>
+    <div class="mob-modal-body">
+      <div>
+        <label class="mob-form-label">Título *</label>
+        <input id="mob-ev-title" class="mob-form-input" type="text" placeholder="Ex: Reunião Carrefour" value="${ev.title||''}">
+      </div>
+      <div class="mob-form-row">
+        <div><label class="mob-form-label">Data *</label><input id="mob-ev-date" class="mob-form-input" type="date" value="${ev.date||ds}"></div>
+        <div><label class="mob-form-label">Horário</label><input id="mob-ev-time" class="mob-form-input" type="time" value="${ev.time||''}"></div>
+      </div>
+      <div><label class="mob-form-label">Localidade</label><input id="mob-ev-local" class="mob-form-input" type="text" placeholder="SP, RJ, MG..." value="${ev.local||''}"></div>
+      <div>
+        <label class="mob-form-label">Responsável</label>
+        <div class="mob-radio-group">
+          <label class="mob-rl ${respArr0.includes('pollyanna')?'s-pollyanna':''}" id="mob-rl-pollyanna" onclick="mobToggleResp('pollyanna')"><span class="av av-p" style="width:18px;height:18px;font-size:8px;">P</span> Pollyanna</label>
+          <label class="mob-rl ${respArr0.includes('fernanda')?'s-fernanda':''}" id="mob-rl-fernanda" onclick="mobToggleResp('fernanda')"><span class="av av-f" style="width:18px;height:18px;font-size:8px;">F</span> Fernanda</label>
+          <label class="mob-rl ${respArr0.includes('luiz')?'s-luiz':''}" id="mob-rl-luiz" onclick="mobToggleResp('luiz')"><span class="av av-l" style="width:18px;height:18px;font-size:8px;">L</span> Luiz</label>
+        </div>
+      </div>
+      <div>
+        <label class="mob-form-label">Modalidade</label>
+        <div class="mob-radio-group" id="mob-rmod">
+          <label class="mob-rl ${m0==='online'?'s-online':''}" data-val="online" onclick="mobSetRadio('mob-rmod','mob-ev-mod','online')">Online</label>
+          <label class="mob-rl ${m0==='presencial'?'s-presencial':''}" data-val="presencial" onclick="mobSetRadio('mob-rmod','mob-ev-mod','presencial')">Presencial</label>
+        </div>
+        <input type="hidden" id="mob-ev-mod" value="${m0}">
+      </div>
+      <div>
+        <label class="mob-form-label">Tipo</label>
+        <div class="mob-radio-group" id="mob-rtipo">
+          <label class="mob-rl ${t0==='equipe'?'s-equipe':''}" data-val="equipe" onclick="mobSetRadio('mob-rtipo','mob-ev-tipo','equipe')">Equipe</label>
+          <label class="mob-rl ${t0==='cliente'?'s-cliente':''}" data-val="cliente" onclick="mobSetRadio('mob-rtipo','mob-ev-tipo','cliente')">Cliente</label>
+          <label class="mob-rl ${t0==='outro'?'s-outro':''}" data-val="outro" onclick="mobSetRadio('mob-rtipo','mob-ev-tipo','outro')">Outro</label>
+        </div>
+        <input type="hidden" id="mob-ev-tipo" value="${t0}">
+      </div>
+      <div class="mob-planta-box">
+        <div class="mob-planta-toggle" onclick="mobTogglePlanta()">
+          <span class="mob-planta-label">Visita em planta?</span>
+          <button class="mob-toggle-sw ${(ev.planta)?'on':''}" id="mob-planta-sw"></button>
+        </div>
+        <div class="mob-planta-fields" id="mob-planta-fields" style="display:${ev.planta?'flex':'none'};">
+          <input id="mob-ev-clientePlanta" class="mob-form-input" type="text" placeholder="Cliente presente" value="${ev.clientePlanta||''}">
+          <input id="mob-ev-estadoCliente" class="mob-form-input" type="text" placeholder="Estado do cliente (SP, RJ...)" value="${ev.estadoCliente||''}">
+        </div>
+      </div>
+      <div><label class="mob-form-label">Observações</label><textarea id="mob-ev-desc" class="mob-form-input" style="min-height:70px;" placeholder="Participantes, pauta...">${ev.desc||''}</textarea></div>
+      <div class="mob-btn-row">
+        ${isEdit?`<button class="mob-btn mob-btn-danger" onclick="mobDeleteEv('${ev.id}')">Excluir</button>`:''}
+        <button class="mob-btn" onclick="mobCloseModal()">Cancelar</button>
+        <button class="mob-btn mob-btn-primary" onclick="mobSaveEv('${ev.id||''}')">
+          ${isEdit?'Salvar':'Adicionar'}
+        </button>
+      </div>
+    </div>`;
+  wrap.classList.add('open');
+  wrap.onclick=(e)=>{if(e.target===wrap)mobCloseModal();};
+}
+
+function mobToggleResp(val){
+  if(!window._currentResp) window._currentResp=[];
+  const idx=window._currentResp.indexOf(val);
+  if(idx>=0) window._currentResp.splice(idx,1);
+  else window._currentResp.push(val);
+  ['pollyanna','fernanda','luiz'].forEach(r=>{
+    const el=document.getElementById('mob-rl-'+r);
+    if(!el) return;
+    el.className='mob-rl';
+    if(window._currentResp.includes(r)) el.classList.add('s-'+r);
+  });
+}
+
+function mobSetRadio(gid,hid,val){
+  document.getElementById(gid).querySelectorAll('.mob-rl').forEach(l=>{l.className='mob-rl';});
+  document.getElementById(hid).value=val;
+  const lbl=document.querySelector(`#${gid} [data-val="${val}"]`);
+  if(lbl) lbl.classList.add('s-'+val);
+}
+
+function mobTogglePlanta(){
+  const sw=document.getElementById('mob-planta-sw');
+  const fields=document.getElementById('mob-planta-fields');
+  if(!sw||!fields) return;
+  const isOn=sw.classList.contains('on');
+  sw.classList.toggle('on');
+  fields.style.display=isOn?'none':'flex';
+}
+
+async function mobSaveEv(existingId){
+  const title=document.getElementById('mob-ev-title').value.trim();
+  if(!title){document.getElementById('mob-ev-title').style.borderColor='#E24B4A';return;}
+  if(!window._currentResp||window._currentResp.length===0){alert('Selecione ao menos um responsável.');return;}
+  const isEdit=!!existingId;
+  const plantaSw=document.getElementById('mob-planta-sw');
+  const newEv={
+    id:isEdit?existingId:(Date.now().toString(36)+Math.random().toString(36).slice(2)),
+    title,
+    date:document.getElementById('mob-ev-date').value,
+    time:document.getElementById('mob-ev-time').value,
+    local:document.getElementById('mob-ev-local').value.trim(),
+    resp:[...window._currentResp],
+    mod:document.getElementById('mob-ev-mod').value,
+    tipo:document.getElementById('mob-ev-tipo').value,
+    desc:document.getElementById('mob-ev-desc').value.trim(),
+    planta:plantaSw?plantaSw.classList.contains('on'):false,
+    clientePlanta:document.getElementById('mob-ev-clientePlanta')?document.getElementById('mob-ev-clientePlanta').value.trim():'',
+    estadoCliente:document.getElementById('mob-ev-estadoCliente')?document.getElementById('mob-ev-estadoCliente').value.trim():'',
+  };
+  if(isEdit){state.events=state.events.map(e=>e.id===existingId?newEv:e);}
+  else{state.events.push(newEv);}
+  if(firebaseReady) await fbSet(`events/${newEv.id}`,newEv);
+  mobCloseModal();
+  renderAll(); // also update desktop
+}
+
+function mobExportPDF(){
+  exportPDF();
+}
+
+function mobInitIfMobile(){
+  if(!isMobile()) return;
+  const t=new Date();
+  mobState.year=t.getFullYear(); mobState.month=t.getMonth();
+  mobState.selectedDate=dstr(t.getFullYear(),t.getMonth(),t.getDate());
+  state.year=mobState.year; state.month=mobState.month;
+  // wait for firebase then render
+  setTimeout(()=>{mobRenderAgenda();mobRenderStats();},800);
+}
+
+// override renderAll to also refresh mobile
+const _origRenderAll=renderAll;
+function renderAll(){
+  _origRenderAll();
+  if(isMobile()){mobRenderAgenda();mobRenderStats();}
+}
+
+window.addEventListener('resize',()=>{
+  if(isMobile()){mobRenderAgenda();mobRenderStats();}
+});
+
 /* ── init ── */
 if(DB_URL) document.getElementById('firebase-url-input').value=DB_URL;
-initFirebase();
+initFirebase().then(()=>{mobInitIfMobile();}).catch(()=>{mobInitIfMobile();});
 </script>
 </body>
 </html>
